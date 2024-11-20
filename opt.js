@@ -73,6 +73,9 @@ let posts = [
 
 
 
+
+
+
 // Function to display posts
 function displayPosts(filteredPosts = null) {
     const resultsDiv = document.getElementById("postResults");
@@ -154,10 +157,16 @@ document.getElementById("createPostForm").addEventListener("submit", function (e
     displayPosts();
 });
 
-// Function to contact author
+// Function to contact the doctor
 function contactDoctor(doctor) {
-    alert(`You can now send a message to ${author}.`);
+    alert(`You can now send a message to Dr. ${doctor}.`); // Corrected to use "doctor" variable
     document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+
+    // Optionally populate the "Contact Doctor" form with the doctor's name
+    const contactNameField = document.getElementById("contactName");
+    if (contactNameField) {
+        contactNameField.value = `Message to Dr. ${doctor}`;
+    }
 }
 
 // Initial display of posts
