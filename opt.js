@@ -33,48 +33,8 @@ let posts = [
         symptoms: "Severe fatigue, memory issues, difficulty concentrating", 
         signs: "Sore throat, swollen lymph nodes, muscle aches", 
         content: "CFS is a complex condition characterized by extreme fatigue that doesn't improve with rest." 
-    },
-    { 
-        title: "Parkinson's Plus Syndrome", 
-        doctor: "Dr. Harris", 
-        symptoms: "Tremors, stiffness, difficulty swallowing", 
-        signs: "Speech difficulties, impaired balance, slow movements", 
-        content: "A group of neurological disorders that share symptoms with Parkinson's disease but progress differently." 
-    },
-    { 
-        title: "Celiac Disease", 
-        doctor: "Dr. Patel", 
-        symptoms: "Chronic diarrhea, weight loss, fatigue", 
-        signs: "Bloating, malnutrition, itchy rash", 
-        content: "Celiac disease is an autoimmune condition triggered by gluten, leading to intestinal damage." 
-    },
-    { 
-        title: "Fibrodysplasia Ossificans Progressiva (FOP)", 
-        doctor: "Dr. Jameson", 
-        symptoms: "Progressive stiffness, immobility, pain during movement", 
-        signs: "Bone formation in muscles, deformed toes, joint fusions", 
-        content: "A rare genetic condition where muscle tissue transforms into bone, causing severe immobility." 
-    },
-    { 
-        title: "Stiff-Person Syndrome", 
-        doctor: "Dr. Carter", 
-        symptoms: "Muscle stiffness, painful spasms, difficulty walking", 
-        signs: "Postural deformities, heightened sensitivity to touch or sound, rigid posture", 
-        content: "A rare neurological disorder causing progressive muscle stiffness and spasms." 
-    },
-    { 
-        title: "Primary Lateral Sclerosis (PLS)", 
-        doctor: "Dr. Wright", 
-        symptoms: "Weakness in legs, difficulty with speech, slow movements", 
-        signs: "Spasticity, exaggerated reflexes, difficulty maintaining posture", 
-        content: "PLS is a rare motor neuron disease affecting voluntary muscle control." 
     }
 ];
-
-
-
-
-
 
 // Function to display posts
 function displayPosts(filteredPosts = null) {
@@ -103,7 +63,7 @@ function displayPosts(filteredPosts = null) {
     });
 }
 
-// Fixed search function
+// Enhanced search function with keyword validation
 function searchPosts() {
     const searchInput = document.getElementById("postSearch").value.toLowerCase().trim();
     const resultsDiv = document.getElementById("postResults");
@@ -114,37 +74,53 @@ function searchPosts() {
         return;
     }
 
-    // Split the user's input into individual words
-    const searchWords = searchInput.split(/\s+/); // Split by spaces
-    const matchingPosts = [];
+    // Split the input into words and filter out single characters
+    const searchKeywords = searchInput
+        .split(/\s+/) // Split by spaces
+        .filter(word => word.length > 1); // Remove single characters
 
-    // Iterate through each post
+    if (searchKeywords.length === 0) {
+        resultsDiv.innerHTML = "<p>No valid keywords found. Please refine your search.</p>";
+        return;
+    }
+
+    const postMatches = [];
+
+    // Iterate through posts to calculate match counts
     posts.forEach((post) => {
-        // Combine signs and symptoms into a single searchable text
         const combinedText = `${post.signs.toLowerCase()} ${post.symptoms.toLowerCase()}`;
         let matchCount = 0;
 
-        // Check how many search words match in the combined text
-        searchWords.forEach((word) => {
-            if (combinedText.includes(word)) {
+        searchKeywords.forEach((keyword) => {
+            if (combinedText.includes(keyword)) {
                 matchCount++;
             }
         });
 
-        // Add post to results if at least 2 words match
-        if (matchCount >= 2) {
-            matchingPosts.push(post);
+        if (matchCount > 0) {
+            postMatches.push({ post, matchCount });
         }
     });
 
-    // Display matching posts or show "No posts found"
-    displayPosts(matchingPosts);
+    if (postMatches.length === 0) {
+        resultsDiv.innerHTML = "<p>No matching posts found. Please refine your search.</p>";
+        return;
+    }
+
+    // Determine the maximum match count
+    const maxMatchCount = Math.max(...postMatches.map(match => match.matchCount));
+
+    // Filter posts with the maximum match count
+    const topMatches = postMatches.filter(match => match.matchCount === maxMatchCount)
+                                  .map(match => match.post);
+
+    // Display only the top matches
+    displayPosts(topMatches);
 }
 
 // Handle creating a new post
 document.getElementById("createPostForm").addEventListener("submit", function (event) {
     event.preventDefault();
-    
     const title = document.getElementById("postTitle").value;
     const doctor = document.getElementById("postDoctor").value;
     const symptoms = document.getElementById("postSymptoms").value;
@@ -157,16 +133,10 @@ document.getElementById("createPostForm").addEventListener("submit", function (e
     displayPosts();
 });
 
-// Function to contact the doctor
+// Function to contact doctor
 function contactDoctor(doctor) {
-    alert(`You can now send a message to Dr. ${doctor}.`); // Corrected to use "doctor" variable
+    alert(`You can now send a message to ${doctor}.`);
     document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
-
-    // Optionally populate the "Contact Doctor" form with the doctor's name
-    const contactNameField = document.getElementById("contactName");
-    if (contactNameField) {
-        contactNameField.value = `Message to Dr. ${doctor}`;
-    }
 }
 
 // Initial display of posts
