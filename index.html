@@ -11,6 +11,13 @@
         <div class="logo">
             <h1>OptiHealth</h1>
         </div>
+
+    <div id="agency-banner">
+        <img src="3mtt.jpg" alt="Agency Logo" class="agency-logo">
+        <span class="agency-name">FMCIDE</span>
+    </div>
+
+
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
@@ -31,6 +38,13 @@
         <input type="text" id="postSearch" placeholder="Hi, ask me what do you feel.....">
         <button onclick="searchPosts()">Search</button>
         <div id="postResults"></div>
+
+<div id="pagination">
+    <button id="prevButton" onclick="navigatePosts('prev')">Previous</button>
+    <button id="nextButton" onclick="navigatePosts('next')">Next</button>
+</div>
+
+
     </section>
 
     <section id="createPost">
@@ -50,6 +64,8 @@
 
             <label for="postContent">Description:</label>
             <textarea id="postContent" required></textarea>
+
+
 
             <button type="submit">Submit Post</button>
         </form>

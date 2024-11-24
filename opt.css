@@ -156,6 +156,7 @@ button:hover {
 .agency-logo {
     max-height: 50px; /* Limit the size of the logo */
     margin-right: 15px; /* Space between logo and agency name */
+    max-width: 70px;
 }
 
 .agency-name {
