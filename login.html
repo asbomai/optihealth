@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration and Login Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .container h2 {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .toggle {
+            color: #007bff;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <h2 id="form-title">Register</h2>
+        <div id="error-message" class="error"></div>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="handleSubmit()">Submit</button>
+        <p>
+            <span id="toggle-text">Already have an account?</span>
+            <span class="toggle" onclick="toggleForm()">Login</span>
+        </p>
+    </div>
+
+    <script>
+        let isRegistering = true;
+        let users = {};
+
+        function toggleForm() {
+            isRegistering = !isRegistering;
+            document.getElementById('form-title').innerText = isRegistering ? 'Register' : 'Login';
+            document.getElementById('toggle-text').innerText = isRegistering ? 'Already have an account?' : "Don't have an account?";
+            document.querySelector('.toggle').innerText = isRegistering ? 'Login' : 'Register';
+            document.getElementById('error-message').innerText = '';
+        }
+
+        function handleSubmit() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (!username || !password) {
+                errorMessage.innerText = 'Please fill in all fields.';
+                return;
+            }
+
+            if (isRegistering) {
+                if (users[username]) {
+                    errorMessage.innerText = 'Username already exists.';
+                } else {
+                    users[username] = password;
+                    errorMessage.innerText = 'Registration successful! You can now login.';
+                    toggleForm();
+                }
+            } else {
+                if (users[username] && users[username] === password) {
+                    errorMessage.innerText = '';
+                    window.location.href = 'welcome.html';
+                } else {
+                    errorMessage.innerText = 'Invalid username or password.';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
